@@ -11,9 +11,14 @@ pygame.init()       # Initializes the display as well as other things
 levelfile = json.load(open("level_001.json"))
 
 # Initialize objects
-screen = Screen(350, 350)       # screen size in px
-screen.shows([255,228,182], levelfile)  
+screen = Screen(350, 350, background_color=[255,228,182])       # screen size in px
 
+# Display first level
+for i in range(0,len(levelfile[0])-1):    # customize this so we don't use integers
+    for j in range(0,len(levelfile)):
+        position = (i,j)    # save object position
+        tile = levelfile[i][j]     # read object to draw
+        screen.shows(tile, position)   # show objects on screen
 
 # Event loop.
 while True:

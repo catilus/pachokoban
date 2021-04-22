@@ -11,7 +11,7 @@ pygame.init()       # Initializes the display as well as other things
 levelfile = json.load(open("level_001.json"))
 
 # Initialize objects
-screen = Screen(500, 500)       # screen size in px
+screen = Screen(350, 350)       # screen size in px
 screen.shows([255,228,182], levelfile)  
 
 

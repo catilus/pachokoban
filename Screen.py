@@ -40,7 +40,6 @@ class Screen:
         elif tile == 'b':   # background tile
             #background_color=(0,0,0)
             rect=(position[1]*tile_size, position[0]*tile_size, tile_size, tile_size)
-            print(rect)
             pygame.draw.rect(self.window,background_color,rect)
             pygame.display.update()
             pygame.display.flip()

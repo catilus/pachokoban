@@ -33,9 +33,87 @@ while True:
         # If user presses keyboard touch
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                screen.shows('b', pacho.position, background_color) # draws background tile on top of pacho
-                pacho.modifyPosition(x_move=0, y_move=-1)  # modifies pacho's position 
-                screen.shows('p', pacho.position, background_color) # draws pacho at new position
+                
+                x_move=0
+                y_move=-1
+                # calculate pacho's new position
+                new_position = (pacho.position[0]+x_move, pacho.position[1]+y_move)
+
+                if 0 <= new_position[1]:   # so that pacho cannot get out of the screen
+                    if levelfile[new_position[0]][new_position[1]] == 'w':
+                        pass
+
+                    else: 
+                        screen.shows('b', pacho.position, background_color) # draws background tile on top of pacho
+                        pacho.modifyPosition(x_move, y_move)  # modifies pacho's position 
+                        screen.shows('p', pacho.position, background_color) # draws pacho at new position
+                
+                else:
+                    pass        
+        
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+
+                x_move=0
+                y_move=1
+                # calculate pacho's new position
+                new_position = (pacho.position[0]+x_move, pacho.position[1]+y_move)
+                
+                if new_position[1] <= len(levelfile)-1: 
+                    if levelfile[new_position[0]][new_position[1]] == 'w':
+                        pass
+
+                    else: 
+                        screen.shows('b', pacho.position, background_color) # draws background tile on top of pacho
+                        pacho.modifyPosition(x_move, y_move)  # modifies pacho's position 
+                        screen.shows('p', pacho.position, background_color) # draws pacho at new position
+                
+                else:
+                    pass   
+
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                
+                x_move=-1
+                y_move=0
+                # calculate pacho's new position
+                new_position = (pacho.position[0]+x_move, pacho.position[1]+y_move)
+
+                if 0 <= new_position[0]:
+                    if levelfile[new_position[0]][new_position[1]] == 'w':
+                        pass
+
+                    else: 
+                        screen.shows('b', pacho.position, background_color) # draws background tile on top of pacho
+                        pacho.modifyPosition(x_move, y_move)  # modifies pacho's position 
+                        screen.shows('p', pacho.position, background_color) # draws pacho at new position
+                
+                else:
+                    pass   
+                 
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_DOWN:
+                
+                x_move=1
+                y_move=0
+                # calculate pacho's new position
+                new_position = (pacho.position[0]+x_move, pacho.position[1]+y_move)
+
+                if new_position[0] <= len(levelfile[0])-1:
+                    if levelfile[new_position[0]][new_position[1]] == 'w':
+                        pass
+
+                    else: 
+                        screen.shows('b', pacho.position, background_color) # draws background tile on top of pacho
+                        pacho.modifyPosition(x_move, y_move)  # modifies pacho's position 
+                        screen.shows('p', pacho.position, background_color) # draws pacho at new position
+                
+                else:
+                    pass            
+        
         
         if event.type == QUIT:          # Keeps pygame window open unless asked otherwise
             pygame.quit()

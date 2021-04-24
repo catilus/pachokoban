@@ -73,13 +73,13 @@ while True:
                         # if the next new position of the cheese is in the screen    
                         if 0 <= next_new_position[0] <= len(levelfile)-1 and 0 <= next_new_position[1] <= len(levelfile[0])-1:
                         
-                            # if there is a wall on next new position
+                            # cheese doesn't move if there is a wall on next new position
                             if levelfile[next_new_position[0]][next_new_position[1]] == 'w':
                                 pass
-                            # or another cheese
+                            # cheese doesn't move if there is another cheese on next new position
                             elif next_new_position in list_of_cheeses:
                                 pass
-                            # otherwise move cheese
+                            # otherwise cheese moves
                             else:    
                                 screen.shows('b', pacho.position, background_color) # draws background tile on top of pacho
                                 pacho.modifyPosition(x_move, y_move)  # modifies pacho's position 
@@ -97,7 +97,13 @@ while True:
                         
                     # otherwise only Pacho moves
                     else:
-                        screen.shows('b', pacho.position, background_color) # draws background tile on top of pacho
+                        # if Pacho was on a spot, draws background and spot tile on top of Pacho
+                        if levelfile[pacho.position[0]][pacho.position[1]] == 's':
+                            screen.shows('b', pacho.position, background_color)
+                            screen.shows('s', pacho.position, background_color) 
+                        else: # draws only background tile on top of pacho
+                            screen.shows('b', pacho.position, background_color) 
+
                         pacho.modifyPosition(x_move, y_move)  # modifies pacho's position  
                         screen.shows('p', pacho.position, background_color) # draws pacho at new position      
                 

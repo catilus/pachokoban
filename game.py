@@ -81,7 +81,13 @@ while True:
                                 pass
                             # otherwise cheese moves
                             else:    
-                                screen.shows('b', pacho.position, background_color) # draws background tile on top of pacho
+                                # if Pacho moves onto a spot position, draws background and spot tile on top of Pacho
+                                if levelfile[pacho.position[0]][pacho.position[1]] == 's':
+                                    screen.shows('b', pacho.position, background_color)
+                                    screen.shows('s', pacho.position, background_color) 
+                                else: # draws only background tile on top of pacho
+                                    screen.shows('b', pacho.position, background_color) 
+                                
                                 pacho.modifyPosition(x_move, y_move)  # modifies pacho's position 
                                 screen.shows('b', pacho.position, background_color) # draws background tile on top of cheese
                                 screen.shows('p', pacho.position, background_color) # draws pacho at new position 
@@ -89,7 +95,12 @@ while True:
                                 # modify cheese's position
                                 cheese_position_in_list = list_of_cheeses.index(new_position)
                                 list_of_cheeses[cheese_position_in_list] = next_new_position
-                                screen.shows('c', next_new_position, background_color) # draws cheese behind    
+                                
+                                # if cheese moves onto a spot position, draws eaten cheese
+                                if levelfile[next_new_position[0]][next_new_position[1]] == 's':
+                                    screen.shows('e', next_new_position, background_color) 
+                                else: # draws full cheese 
+                                    screen.shows('c', next_new_position, background_color) # draws cheese behind
                         
                         # otherwise pass
                         else:

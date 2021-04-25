@@ -5,7 +5,7 @@ class Screen:
 
     def __init__(self, width, height, background_color):
         self.width = width
-        self.heigth = height
+        self.height = height
         self.window = pygame.display.set_mode((width,height))   # screen size
         self.window.fill(background_color)  # screen background color
         pygame.display.set_caption("Pachokoban")    # sets window caption
@@ -48,6 +48,18 @@ class Screen:
             pygame.draw.rect(self.window,background_color,rect)
             pygame.display.update()
             pygame.display.flip()
+
+        elif tile == 'victory':
+            rect=(position[1], position[0], self.width, self.height)
+            pygame.draw.rect(self.window,background_color,rect)
+            tile_image = pygame.image.load("tiles/victory.png")
+            self.window.blit(tile_image, ((self.width-200)/2, (self.width-60)/2))
+            pygame.display.update()
+            pygame.display.flip()
+            
+            
+            #pygame.display.update()
+            #pygame.display.flip()
 
         
 

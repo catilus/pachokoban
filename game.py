@@ -15,8 +15,8 @@ levelfile = json.load(open("level_001.json"))
 ## Initialize objects
 background_color=(255,228,182)
 screen = Screen(350, 350, background_color)   # screen width and height are in px
-list_of_cheeses = []
-
+list_of_cheeses = []    # list of cheeses' positions
+list_of_spots = []      # list of spots' positions
 
 # Display first level
 for i in range(0,len(levelfile[0])-1):    # customize this so we don't use integers
@@ -30,6 +30,8 @@ for i in range(0,len(levelfile[0])-1):    # customize this so we don't use integ
             pacho = Pacho(tile, position)
         elif tile == 'c':
             list_of_cheeses.append(position) # No need to make an object for each cheese
+        elif tile == 's':
+            list_of_spots.append(position) # No need to make an object for each spot   
 
 
 ## Event loop.
@@ -117,9 +119,16 @@ while True:
 
                         pacho.modifyPosition(x_move, y_move)  # modifies pacho's position  
                         screen.shows('p', pacho.position, background_color) # draws pacho at new position      
-                
+
             else:
-                pass        
+                pass   
+    
+            if sorted(list_of_cheeses)==sorted(list_of_spots):  
+                print("You won!")    
+                screen.shows('victory', (0,0), background_color)
+            else:
+                pass    
+            
         
         if event.type == QUIT:          # Keeps pygame window open unless asked otherwise
             pygame.quit()

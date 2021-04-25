@@ -35,14 +35,22 @@ for i in range(0,len(levelfile[0])-1):
         elif tile == 's':
             list_of_spots.append(position) # No need to make an object for each spot   
 
-screen.shows('counter', (5,5), background_color, steps_counter)
+screen.shows('counter', (5,5), background_color, steps_counter) # can we do **kwargs? sometimes we don't need all arguments to draw one thing
 
-## Event loop.
-while True:
+
+running = True
+
+while running:  # Keeps pygame window opened unless asked otherwise
+    
+    # Event loop.
     for event in pygame.event.get():
         
         # If user presses keyboard touch
-        if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN:  
+
+            x_move=0 
+            y_move=0          
+            
             if event.key == pygame.K_LEFT:             
                 x_move=0
                 y_move=-1
@@ -57,7 +65,7 @@ while True:
 
             elif event.key == pygame.K_DOWN:            
                 x_move=1
-                y_move=0     
+                y_move=0
                 
             # calculate pacho's new position
             new_position = (pacho.position[0]+x_move, pacho.position[1]+y_move)
@@ -126,21 +134,33 @@ while True:
                         pacho.modifyPosition(x_move, y_move)  # modifies pacho's position  
                         screen.shows('p', pacho.position, background_color, steps_counter) # draws pacho at new position     
                         steps_counter += 1 
-                        screen.shows('counter', (5,5), background_color, steps_counter)
-
+                        screen.shows('counter', (5,5), background_color, steps_counter)    
+            
             else:
-                pass   
-    
+                pass 
+
             if sorted(list_of_cheeses)==sorted(list_of_spots):  
                 #print("You solved this level in {} steps".format(steps_counter))    
                 screen.shows('victory', (0,0), background_color, steps_counter)
             else:
                 pass    
-            
+
+            if event.key == pygame.K_ESCAPE:    # Display options screen
+
+                screen.shows('menu', (0,0), background_color, steps_counter)
+                
+                if event.type == pygame.KEYDOWN:
+                    
+                    if event.key == pygame.K_q:     # Quit the game
+                        running is False
+                    #elif event.key == pygame.K_RETURN:  # Resume game
+                    #    pass
+                    #elif event.key == pygame.K_r:   # Restart game
+                    #    pass   
         
-        if event.type == QUIT:          # Keeps pygame window open unless asked otherwise
+        if event.type == QUIT:          
             pygame.quit()
             quit()
 
 
-#pygame.display.quit()      # closes the display, automatically handled when user exits program
+pygame.display.quit()      # closes the display, automatically handled when user exits program

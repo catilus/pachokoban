@@ -66,20 +66,32 @@ class Screen:
             # blits onto screen
             self.window.blit(s, (0,0))
 
-            # To write victory text on window
+            # writes victory text on window
             font = pygame.font.Font('fonts/Raleway-SemiBold.ttf', 50)
             text = font.render('You won!', True, (0,0,0), None)
-            # To center the text in the window
             textRect = text.get_rect()
-            textRect.center = (self.width//2, self.height//2)
+            textRect.center = (self.width//2, self.height//2)   # centers text on window
             self.window.blit(text, textRect)
-            
-            #tile_image = pygame.image.load("tiles/victory.png")
-            #self.window.blit(tile_image, ((self.width-200)/2, (self.width-60)/2))
-            
             
             pygame.display.update()
             pygame.display.flip()
+
+        elif tile == 'menu':
+            s = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            s.fill((255,255,255,180))
+            self.window.blit(s, (0,0))
+
+            font = pygame.font.Font('fonts/Raleway-SemiBold.ttf', 30)
+            text = font.render('Exit game (press Q)', True, (0,0,0), None)
+            textRect = text.get_rect()
+            textRect.center = (self.width//2, self.height//4)
+            self.window.blit(text, textRect)
+
+            pygame.display.update()
+            pygame.display.flip() 
+
+        else:
+            pass    
             
         
 

@@ -10,7 +10,7 @@ class Screen:
         self.window.fill(background_color)  # screen background color
         pygame.display.set_caption("Pachokoban")    # sets window caption
 
-    def shows(self, tile, position, background_color):
+    def shows(self, tile, position, background_color, steps_counter):
         tile_size = 50
         
         if tile == 'w':     # wall
@@ -49,11 +49,20 @@ class Screen:
             pygame.display.update()
             pygame.display.flip()
 
+        elif tile == 'counter':     # show counter
+            font = pygame.font.Font('fonts/Raleway-ExtraLight.ttf', 20)
+            text = font.render('Steps: {}'.format(steps_counter), True, (0,0,0), None)
+            text_rect = (position[0], position[1], 100, 25)
+            pygame.draw.rect(self.window, background_color, text_rect)
+            self.window.blit(text, position)
+            pygame.display.update()
+            pygame.display.flip()
+
         elif tile == 'victory':
             # creates a new surface that manages transparency
             s = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             # sets colors, 255 = fully opaque
-            s.fill((255,255,255,200))
+            s.fill((255,255,255,180))
             # blits onto screen
             self.window.blit(s, (0,0))
 

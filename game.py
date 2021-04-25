@@ -20,11 +20,12 @@ list_of_spots = []      # list of spots' positions
 steps_counter = 0
 
 # Display first level
+
 for i in range(0,len(levelfile[0])-1):    
     for j in range(0,len(levelfile)):
         position = (i,j)    # saves object position
         tile = levelfile[i][j]     # reads which object to show
-        screen.shows(tile, position, background_color)   # shows objects on screen
+        screen.shows(tile, position, background_color, steps_counter)   # shows objects on screen
 
         # Initializes pacho and list of cheeses and spots containing their position
         if tile == 'p':
@@ -34,6 +35,7 @@ for i in range(0,len(levelfile[0])-1):
         elif tile == 's':
             list_of_spots.append(position) # No need to make an object for each spot   
 
+screen.shows('counter', (5,5), background_color, steps_counter)
 
 ## Event loop.
 while True:
@@ -86,16 +88,17 @@ while True:
                             else:    
                                 # if Pacho moves onto a spot position, draws background and spot tile on top of Pacho
                                 if levelfile[pacho.position[0]][pacho.position[1]] == 's':
-                                    screen.shows('b', pacho.position, background_color)
-                                    screen.shows('s', pacho.position, background_color) 
+                                    screen.shows('b', pacho.position, background_color, steps_counter)
+                                    screen.shows('s', pacho.position, background_color, steps_counter) 
                                 else: # draws only background tile on top of pacho
-                                    screen.shows('b', pacho.position, background_color) 
+                                    screen.shows('b', pacho.position, background_color, steps_counter) 
                                 
                                 pacho.modifyPosition(x_move, y_move)  # modifies pacho's position 
-                                screen.shows('b', pacho.position, background_color) # draws background tile on top of cheese
-                                screen.shows('p', pacho.position, background_color) # draws pacho at new position 
+                                screen.shows('b', pacho.position, background_color, steps_counter) # draws background tile on top of cheese
+                                screen.shows('p', pacho.position, background_color, steps_counter) # draws pacho at new position 
 
                                 steps_counter += 1  # increments steps counter
+                                screen.shows('counter', (5,5), background_color, steps_counter)
 
                                 # modify cheese's position
                                 cheese_position_in_list = list_of_cheeses.index(new_position)
@@ -103,9 +106,9 @@ while True:
                                 
                                 # if cheese moves onto a spot position, draws eaten cheese
                                 if levelfile[next_new_position[0]][next_new_position[1]] == 's':
-                                    screen.shows('e', next_new_position, background_color) 
+                                    screen.shows('e', next_new_position, background_color, steps_counter) 
                                 else: # draws full cheese 
-                                    screen.shows('c', next_new_position, background_color) # draws cheese behind
+                                    screen.shows('c', next_new_position, background_color, steps_counter) # draws cheese behind
                         
                         # otherwise pass
                         else:
@@ -115,21 +118,22 @@ while True:
                     else:
                         # if Pacho was on a spot, draws background and spot tile on top of Pacho
                         if levelfile[pacho.position[0]][pacho.position[1]] == 's':
-                            screen.shows('b', pacho.position, background_color)
-                            screen.shows('s', pacho.position, background_color) 
+                            screen.shows('b', pacho.position, background_color, steps_counter)
+                            screen.shows('s', pacho.position, background_color, steps_counter) 
                         else: # draws only background tile on top of pacho
-                            screen.shows('b', pacho.position, background_color) 
+                            screen.shows('b', pacho.position, background_color, steps_counter) 
 
                         pacho.modifyPosition(x_move, y_move)  # modifies pacho's position  
-                        screen.shows('p', pacho.position, background_color) # draws pacho at new position     
+                        screen.shows('p', pacho.position, background_color, steps_counter) # draws pacho at new position     
                         steps_counter += 1 
+                        screen.shows('counter', (5,5), background_color, steps_counter)
 
             else:
                 pass   
     
             if sorted(list_of_cheeses)==sorted(list_of_spots):  
-                print("You solved this level in {} steps".format(steps_counter))    
-                screen.shows('victory', (0,0), background_color)
+                #print("You solved this level in {} steps".format(steps_counter))    
+                screen.shows('victory', (0,0), background_color, steps_counter)
             else:
                 pass    
             

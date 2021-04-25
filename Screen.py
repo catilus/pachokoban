@@ -50,16 +50,29 @@ class Screen:
             pygame.display.flip()
 
         elif tile == 'victory':
-            rect=(position[1], position[0], self.width, self.height)
-            pygame.draw.rect(self.window,background_color,rect)
-            tile_image = pygame.image.load("tiles/victory.png")
-            self.window.blit(tile_image, ((self.width-200)/2, (self.width-60)/2))
+            # creates a new surface that manages transparency
+            s = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            # sets colors, 255 = fully opaque
+            s.fill((255,255,255,200))
+            # blits onto screen
+            self.window.blit(s, (0,0))
+
+            # To write victory text on window
+            font = pygame.font.Font('fonts/Raleway-SemiBold.ttf', 50)
+            text = font.render('You won!', True, (0,0,0), None)
+            # To center the text in the window
+            textRect = text.get_rect()
+            textRect.center = (self.width//2, self.height//2)
+            self.window.blit(text, textRect)
+            
+            #tile_image = pygame.image.load("tiles/victory.png")
+            #self.window.blit(tile_image, ((self.width-200)/2, (self.width-60)/2))
+            
+            
             pygame.display.update()
             pygame.display.flip()
             
-            
-            #pygame.display.update()
-            #pygame.display.flip()
+        
 
         
 

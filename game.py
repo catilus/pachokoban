@@ -21,11 +21,15 @@ steps_counter = 0
 
 # Display first level
 
-for i in range(0,len(levelfile[0])-1):    
-    for j in range(0,len(levelfile)):
-        position = (i,j)    # saves object position
-        tile = levelfile[i][j]     # reads which object to show
-        screen.shows(tile, position, background_color, steps_counter)   # shows objects on screen
+x_max = len(levelfile[0])-1
+y_max = len(levelfile)-1
+print(x_max, y_max)
+
+for x in range(0,x_max):    
+    for y in range(0,y_max):
+        position = (x,y)    # saves object position
+        tile = levelfile[x][y]     # reads which object to show
+        screen.shows(tile, position, background_color, steps_counter)   # draws objects on screen
 
         # Initializes pacho and list of cheeses and spots containing their position
         if tile == 'p':
@@ -35,7 +39,7 @@ for i in range(0,len(levelfile[0])-1):
         elif tile == 's':
             list_of_spots.append(position) # No need to make an object for each spot   
 
-screen.shows('counter', (5,5), background_color, steps_counter) # can we do **kwargs? sometimes we don't need all arguments to draw one thing
+screen.shows('counter', (5,5), background_color, steps_counter) # can we do **kwargs? sometimes we don't need all the arguments to draw one thing
 
 
 running = True
@@ -73,7 +77,7 @@ while running:  # Keeps pygame window opened unless asked otherwise
             next_new_position = (new_position[0]+x_move, new_position[1]+y_move)
 
             # if pacho's new position is inside screen, proceed
-            if 0 <= new_position[0] <= len(levelfile)-1 and 0 <= new_position[1] <= len(levelfile[0])-1:   
+            if 0 <= new_position[0] <= x_max and 0 <= new_position[1] <= y_max:   
                     
                 # if there is a wall at new position: do nothing
                 if levelfile[new_position[0]][new_position[1]] == 'w':
@@ -84,7 +88,7 @@ while running:  # Keeps pygame window opened unless asked otherwise
                     if new_position in list_of_cheeses:
 
                         # if the next new position of the cheese is in the screen    
-                        if 0 <= next_new_position[0] <= len(levelfile)-1 and 0 <= next_new_position[1] <= len(levelfile[0])-1:
+                        if 0 <= next_new_position[0] <= x_max and 0 <= next_new_position[1] <= y_max:
                         
                             # cheese doesn't move if there is a wall on next new position
                             if levelfile[next_new_position[0]][next_new_position[1]] == 'w':

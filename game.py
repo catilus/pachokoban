@@ -5,6 +5,7 @@ import pygame.locals
 
 from Screen import *
 from Pacho import *
+from position import *
 #from Cheese import *
 
 pygame.init()       # Initializes the display as well as other things
@@ -23,7 +24,7 @@ steps_counter = 0
 
 x_max = len(levelfile[0])-1
 y_max = len(levelfile)-1
-print(x_max, y_max)
+
 
 for x in range(0,x_max):    
     for y in range(0,y_max):
@@ -41,7 +42,6 @@ for x in range(0,x_max):
 
 screen.shows('counter', (5,5), background_color, steps_counter) # can we do **kwargs? sometimes we don't need all the arguments to draw one thing
 
-
 running = True
 
 while running:  # Keeps pygame window opened unless asked otherwise
@@ -52,115 +52,106 @@ while running:  # Keeps pygame window opened unless asked otherwise
         # If user presses keyboard touch
         if event.type == pygame.KEYDOWN:  
 
+            position = pacho.position
             x_move=0 
             y_move=0          
-            
+
             if event.key == pygame.K_LEFT:             
-                x_move=0
-                y_move=-1
+                y_move-=1
 
             elif event.key == pygame.K_RIGHT:
-                x_move=0
-                y_move=1    
+                y_move+=1    
 
             elif event.key == pygame.K_UP:             
-                x_move=-1
-                y_move=0  
+                x_move-=1
 
             elif event.key == pygame.K_DOWN:            
-                x_move=1
-                y_move=0
+                x_move+=1
                 
             # calculate pacho's new position
-            new_position = (pacho.position[0]+x_move, pacho.position[1]+y_move)
-            # calculate position of object behind pacho
-            next_new_position = (new_position[0]+x_move, new_position[1]+y_move)
+            new_position = (position[0]+x_move, position[1]+y_move)
 
             # if pacho's new position is inside screen, proceed
-            if 0 <= new_position[0] <= x_max and 0 <= new_position[1] <= y_max:   
+            if positionInScreen(new_position, x_max, y_max):   
+
+                if new_position in list_of_cheeses:   # if cheese at new position
                     
-                # if there is a wall at new position: do nothing
-                if levelfile[new_position[0]][new_position[1]] == 'w':
-                    pass
+                    # calculate position of object behind cheese
+                    behind_new_position = (new_position[0]+x_move, new_position[1]+y_move)
 
-                else: 
-                    # if there is a cheese on the new position, the cheese moves as well 
-                    if new_position in list_of_cheeses:
-
-                        # if the next new position of the cheese is in the screen    
-                        if 0 <= next_new_position[0] <= x_max and 0 <= next_new_position[1] <= y_max:
+                    # check if the next new position of the cheese is in the screen    
+                    if positionInScreen(behind_new_position, x_max, y_max):
                         
-                            # cheese doesn't move if there is a wall on next new position
-                            if levelfile[next_new_position[0]][next_new_position[1]] == 'w':
-                                pass
-                            # cheese doesn't move if there is another cheese on next new position
-                            elif next_new_position in list_of_cheeses:
-                                pass
-                            # otherwise cheese moves
-                            else:    
-                                # if Pacho moves onto a spot position, draws background and spot tile on top of Pacho
-                                if levelfile[pacho.position[0]][pacho.position[1]] == 's':
-                                    screen.shows('b', pacho.position, background_color, steps_counter)
-                                    screen.shows('s', pacho.position, background_color, steps_counter) 
-                                else: # draws only background tile on top of pacho
-                                    screen.shows('b', pacho.position, background_color, steps_counter) 
-                                
-                                pacho.modifyPosition(x_move, y_move)  # modifies pacho's position 
-                                screen.shows('b', pacho.position, background_color, steps_counter) # draws background tile on top of cheese
-                                screen.shows('p', pacho.position, background_color, steps_counter) # draws pacho at new position 
-
-                                steps_counter += 1  # increments steps counter
-                                screen.shows('counter', (5,5), background_color, steps_counter)
-
-                                # modify cheese's position
-                                cheese_position_in_list = list_of_cheeses.index(new_position)
-                                list_of_cheeses[cheese_position_in_list] = next_new_position
-                                
-                                # if cheese moves onto a spot position, draws eaten cheese
-                                if levelfile[next_new_position[0]][next_new_position[1]] == 's':
-                                    screen.shows('e', next_new_position, background_color, steps_counter) 
-                                else: # draws full cheese 
-                                    screen.shows('c', next_new_position, background_color, steps_counter) # draws cheese behind
-                        
-                        # otherwise pass
-                        else:
+                        # if wall or cheese behind new position, do not move
+                        if checkPosition(behind_new_position, levelfile) == 'w' or behind_new_position in list_of_cheeses:
                             pass
-                        
-                    # otherwise only Pacho moves
-                    else:
-                        # if Pacho was on a spot, draws background and spot tile on top of Pacho
-                        if levelfile[pacho.position[0]][pacho.position[1]] == 's':
-                            screen.shows('b', pacho.position, background_color, steps_counter)
-                            screen.shows('s', pacho.position, background_color, steps_counter) 
-                        else: # draws only background tile on top of pacho
-                            screen.shows('b', pacho.position, background_color, steps_counter) 
 
-                        pacho.modifyPosition(x_move, y_move)  # modifies pacho's position  
-                        screen.shows('p', pacho.position, background_color, steps_counter) # draws pacho at new position     
-                        steps_counter += 1 
-                        screen.shows('counter', (5,5), background_color, steps_counter)    
-            
+                        else:   
+                            pacho.position = new_position
+                            
+                            # modify cheese's position
+                            cheese_position_in_list = list_of_cheeses.index(new_position)
+                            list_of_cheeses[cheese_position_in_list] = behind_new_position
+                            
+                            # increments steps counter
+                            steps_counter += 1  
+                            screen.shows('counter', (5,5), background_color, steps_counter)
+
+                            tiles = drawAtPosition(position, list_of_spots) 
+                            for tile in tiles:
+                                screen.shows(tile, position, background_color, steps_counter)
+                                
+                            tiles = drawAtNewPosition(new_position)
+                            for tile in tiles:
+                                screen.shows(tile, new_position, background_color, steps_counter)  
+        
+                            tiles = drawBehindNewPosition(behind_new_position, list_of_spots)
+                            for tile in tiles:
+                                screen.shows(tile, behind_new_position, background_color, steps_counter)  
+                    else:
+                        pass
+
+                elif  checkPosition(new_position, levelfile) == 'w': # if wall at new position
+                    pass        
+                
+                else: 
+
+                    pacho.position = new_position
+                    
+                    # increments steps counter
+                    steps_counter += 1  
+                    screen.shows('counter', (5,5), background_color, steps_counter)
+                    
+                    tiles = drawAtPosition(position, list_of_spots) 
+                    for tile in tiles:
+                        screen.shows(tile, position, background_color, steps_counter)
+                    
+                    tiles = drawAtNewPosition(new_position)
+                    for tile in tiles:
+                        screen.shows(tile, new_position, background_color, steps_counter)
+
             else:
                 pass 
 
+            # all the cheeses are on the spots, shows congratulations screen --> could be a while loop
             if sorted(list_of_cheeses)==sorted(list_of_spots):  
-                #print("You solved this level in {} steps".format(steps_counter))    
                 screen.shows('victory', (0,0), background_color, steps_counter)
+            
             else:
                 pass    
 
-            if event.key == pygame.K_ESCAPE:    # Display options screen
+            # if event.key == pygame.K_ESCAPE:    # Display options screen
 
-                screen.shows('menu', (0,0), background_color, steps_counter)
+            #     screen.shows('menu', (0,0), background_color, steps_counter)
                 
-                if event.type == pygame.KEYDOWN:
+            #     if event.type == pygame.KEYDOWN:
                     
-                    if event.key == pygame.K_q:     # Quit the game
-                        running is False
-                    #elif event.key == pygame.K_RETURN:  # Resume game
-                    #    pass
-                    #elif event.key == pygame.K_r:   # Restart game
-                    #    pass   
+            #         if event.key == pygame.K_q:     # Quit the game
+            #             running is False
+            #         #elif event.key == pygame.K_RETURN:  # Resume game
+            #         #    pass
+            #         #elif event.key == pygame.K_r:   # Restart game
+            #         #    pass   
         
         if event.type == QUIT:          
             pygame.quit()

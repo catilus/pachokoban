@@ -43,7 +43,7 @@ class Screen:
             pygame.display.update()
             pygame.display.flip()    
 
-        elif tile == 'b':   # background tile
+        elif tile == '-':   # background tile
             rect=(position[1]*tile_size, position[0]*tile_size, tile_size, tile_size)
             pygame.draw.rect(self.window,background_color,rect)
             pygame.display.update()
